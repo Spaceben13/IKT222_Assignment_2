@@ -1,0 +1,70 @@
+body {
+    font-family: sans-serif;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header h1 {
+    margin-bottom: 0; 
+  }
+
+nav.navbar {
+    margin-top: 0;
+  }
+
+nav.navbar {
+  padding-top: 5px; 
+  padding-bottom: 5px; 
+}
+
+header {
+    background-color: lightblue;
+  }
+
+h1, h2 {
+    margin-bottom: 20px;
+}
+
+.blog-posts article {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.sidebar {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.search-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.comment-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+}
+
+.comment-form button,
+.search-form button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
