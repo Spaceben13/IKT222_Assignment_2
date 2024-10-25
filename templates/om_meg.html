@@ -1,33 +1,15 @@
-<!DOCTYPE html>
-<html lang="no">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Om meg</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <h1>Om meg</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Hjem</a></li>
-                <li><a href="om_meg.html">Om meg</a></li>
-                <li><a href="kontakt.html">Kontakt</a></li>
-            </ul>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <main>
-        <section>
-            <h2>Litt om meg</h2>
-            <p>Her kan du skrive litt om deg selv, dine interesser, og hvorfor du har startet denne bloggen.</p>
-            <p>Du kan også legge til et bilde av deg selv.</p>
-        </section>
-    </main>
+{% block title %}Om meg{% endblock %}
 
-    <footer>
-        <p>&copy; 2024 Min Blogg</p>
-    </footer>
-</body>
-</html>
+{% block content %}
+    <div class="row">
+        <div class="col-md-8">
+            <section>
+                <h2>Litt om meg</h2>
+                <p>Her kan du skrive litt om deg selv, dine interesser, og hvorfor du har startet denne bloggen.</p>
+                <p>Du kan også legge til et bilde av deg selv.</p>
+            </section>
+        </div>
+    </div>
+{% endblock %}
