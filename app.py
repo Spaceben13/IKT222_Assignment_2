@@ -1,30 +1,8 @@
 import os
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, request, g, redirect, url_for
 import sqlite3
 
-
 app = Flask(__name__)
-
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-@app.route("/om_meg")
-def om_meg():
-    return render_template("om_meg.html")
-
-@app.route('/kontakt', methods=['GET', 'POST'])
-def kontakt():
-    if request.method == 'POST':
-        # Her kan du legge til kode for å håndtere innsending av kontaktskjemaet.
-        # For eksempel, lagre dataene i en database eller sende en e-post.
-        return "Takk for meldingen din!"
-    else:
-        return render_template('kontakt.html')
-
-if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
-
 DATABASE = 'database.db'
 
 def get_db():
@@ -46,9 +24,64 @@ def init_db():
             db.cursor().executescript(f.read())
         db.commit()
 
-if __name__ == '__main__':
+# Ensure the database is only initialized once
+if not os.path.exists(DATABASE):
     init_db()
-    app.run(debug=True)
+
+@app.route("/")
+def index():
+    db = get_db()
+    
+    # Fetch the latest post (or None if no posts are in the database)
+    post = db.execute('SELECT * FROM posts ORDER BY created_at DESC LIMIT 1').fetchone()
+    
+    # If no post is found, set comments to an empty list
+    comments = []
+    if post:
+        # Fetch comments for the latest post if it exists
+        comments = db.execute('SELECT comment, created_at FROM comments WHERE post_id = ?', (post['id'],)).fetchall()
+
+    # Render the index template, passing post and comments (empty list if no post exists)
+    return render_template('index.html', post=post, comments=comments)
+
+
+@app.route('/post/<int:post_id>/comment', methods=['POST'])
+def add_comment(post_id):
+    comment = request.form['comment']
+    db = get_db()
+    db.execute('INSERT INTO comments (post_id, comment) VALUES (?, ?)', (post_id, comment))
+    db.commit()
+    return redirect(url_for('view_post', post_id=post_id))
+
+@app.route('/post/<int:post_id>')
+def view_post(post_id):
+    db = get_db()
+    post = db.execute('SELECT * FROM posts WHERE id = ?', (post_id,)).fetchone()
+    comments = db.execute('SELECT comment, created_at FROM comments WHERE post_id = ?', (post_id,)).fetchall()
+
+    return render_template('index.html', post=post, comments=comments)
+
+@app.route("/om_meg")
+def om_meg():
+    return render_template("om_meg.html")
+
+@app.route('/kontakt', methods=['GET', 'POST'])
+def kontakt():
+    if request.method == 'POST':  
+        navn = request.form['navn']
+        epost = request.form['epost']
+        melding = request.form['melding']
+        db = get_db()
+        db.execute('INSERT INTO messages (navn, epost, melding) VALUES (?, ?, ?)', (navn, epost, melding))
+        db.commit()
+        return "Takk for meldingen din!"
+    else:
+        return render_template('kontakt.html')
+
+
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0')
+
 
 
 

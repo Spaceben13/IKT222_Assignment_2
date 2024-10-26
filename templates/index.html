@@ -6,26 +6,48 @@
 <div class="row">
     <div class="col-md-8">
         <section class="blog-posts">
-            <article class="card mb-4">
-                <div class="card-body">
-                    <h2 class="card-title">Tittel på blogginnlegg</h2>
-                    <p class="card-text">Dette er et eksempel på et blogginnlegg. Her kan du skrive tekst, legge til bilder og annen relevant
-                        informasjon.</p>
-                    <a href="#" class="btn btn-primary">Les mer</a>
-                </div>
-            </article>
+            {% if post %}
+                <!-- Display the latest post if it exists -->
+                <article class="card mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title">{{ post['title'] }}</h2>
+                        <p class="card-text">{{ post['content'] }}</p>
+                        <a href="#" class="btn btn-primary">Les mer</a>
+                    </div>
+                </article>
+            {% else %}
+                <!-- Display a placeholder if no post exists -->
+                <p>Ingen blogginnlegg tilgjengelig. Vennligst kom tilbake senere.</p>
+            {% endif %}
         </section>
-
+        
         <section class="comments">
             <h2>Kommentarer</h2>
-            <div class="comment">
-                <p><strong>Navn:</strong> En kommentar</p>
-            </div>
-            <form class="comment-form">
+            {% if comments %}
+                <!-- Display comments if any are available -->
+                {% for comment in comments %}
+                    <div class="comment">
+                        <p>{{ comment['comment'] }}</p>
+                        <small>Skrevet på {{ comment['created_at'] }}</small>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Ingen kommentarer ennå.</p>
+            {% endif %}
+        </section>
+        
+        <!-- Only show comment form if a post exists -->
+        {% if post %}
+            <form class="comment-form" action="{{ url_for('add_comment', post_id=post['id']) }}" method="POST">
                 <label for="comment">Legg til en kommentar:</label>
-                <textarea id="comment" name="comment"></textarea>
+                <textarea id="comment" name="comment" required></textarea>
                 <button type="submit">Send</button>
             </form>
+        {% else %}
+            <p>Ingen blogginnlegg å kommentere på akkurat nå.</p>
+        {% endif %}
+        
+        
         </section>
     </div>
     <div class="col-md-4">
